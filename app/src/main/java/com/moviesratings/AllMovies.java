@@ -1,15 +1,20 @@
 package com.moviesratings;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviesratings.Adapter.MoviesAdapter;
@@ -35,6 +40,7 @@ public class AllMovies extends AppCompatActivity {
     private String url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json?api-key=75ae7de71d0f42adbc2bb18832981a35";
     MoviesAdapter adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +48,7 @@ public class AllMovies extends AppCompatActivity {
         moviesList = new ArrayList<Movie>();
         new JSONAsyncTask().execute(url);
 
-        ListView listview = (ListView)findViewById(R.id.list);
+        ListView listview = (ListView) findViewById(R.id.list);
         adapter = new MoviesAdapter(getApplicationContext(), R.layout.row, moviesList);
 
         listview.setAdapter(adapter);
@@ -76,16 +82,11 @@ public class AllMovies extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... urls) {
             try {
-
                 ServiceHandler sh = new ServiceHandler();
-
                 // Making a request to url and getting response
                 String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
-
                 //Testing Purposes
                 Log.d("Response: ", "> " + jsonStr);
-
-                //------------------>>
                 HttpGet httppost = new HttpGet(urls[0]);
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse response = httpclient.execute(httppost);
@@ -93,16 +94,17 @@ public class AllMovies extends AppCompatActivity {
                 // StatusLine stat = response.getStatusLine();
                 int status = response.getStatusLine().getStatusCode();
 
+                // Status code 200 means that the request has been carried out successfully
                 if (status == 200) {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
 
 
-                    JSONObject jsono = new JSONObject(data);
-                    JSONArray jarray = jsono.getJSONArray("results");
+                    JSONObject JsonObject = new JSONObject(data);
+                    JSONArray JsonArray = JsonObject.getJSONArray("results");
 
-                    for (int i = 0; i < jarray.length(); i++) {
-                        JSONObject obj = jarray.getJSONObject(i);
+                    for (int i = 0; i < JsonArray.length(); i++) {
+                        JSONObject obj = JsonArray.getJSONObject(i);
                         Movie movie = new Movie();
                         movie.setDisplay_title(obj.getString("display_title"));
                         movie.setRating(obj.getString("mpaa_rating"));
@@ -119,20 +121,20 @@ public class AllMovies extends AppCompatActivity {
                         movie.setUrl(link.getString("url"));
                         movie.setSuggested(link.getString("suggested_link_text"));
                         // Multimedia node is JSON Object
-                        JSONObject multimedia = obj.getJSONObject("multimedia");
-                        movie.setType_multimedia(multimedia.getString("type"));
-                        movie.setThumbnailUrl(multimedia.getString("src"));
-                        movie.setHeight(multimedia.getString("height"));
-                        movie.setWidth(multimedia.getString("width"));
+                           JSONObject multimedia = obj.getJSONObject("multimedia");
+                            movie.setType_multimedia(multimedia.getString("type"));
+                            movie.setThumbnailUrl(multimedia.getString("src"));
+                            movie.setHeight(multimedia.getString("height"));
+                            movie.setWidth(multimedia.getString("width"));
+
+
+
 
                         // adding movie to movies array
                         moviesList.add(movie);
                     }
                     return true;
                 }
-
-                //------------------>>
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -145,7 +147,7 @@ public class AllMovies extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             dialog.cancel();
             adapter.notifyDataSetChanged();
-            if(result == false)
+            if (result == false)
                 Toast.makeText(getApplicationContext(), "Unable to fetch data from server", Toast.LENGTH_LONG).show();
 
         }
@@ -155,6 +157,15 @@ public class AllMovies extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
+    }
+
+
+        @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
     }
 
     @Override
@@ -168,7 +179,7 @@ public class AllMovies extends AppCompatActivity {
             return true;
         }
 
-        if (id == android.R.id.home){
+        if (id == android.R.id.home) {
             this.finish();
             overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
             return true;

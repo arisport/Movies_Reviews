@@ -6,4 +6,6 @@
     <string name="title_activity_allmovies">All Movies</string>
     <string name="title_activity_search">Search</string>
     <string name="action_search">Search</string>
+    <string name="search">Search</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
 </resources>

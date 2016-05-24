@@ -12,11 +12,25 @@
         android:layout_height="wrap_content"
         android:text="All Movies" />
 
-    <Button
-        android:id="@+id/button2"
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/button1"
-        android:text="Search For A specific Movie" />
+
+        tools:showIn="@layout/activity_my">
+        <EditText android:id="@+id/edit_message"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Search For A movie" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:onClick="sendMovieRequest"/>
+    </LinearLayout>
 
 </RelativeLayout>

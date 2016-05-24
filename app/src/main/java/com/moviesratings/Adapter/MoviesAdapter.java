@@ -56,7 +56,11 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 			holder = (ViewHolder) v.getTag();
 		}
 		holder.imageview.setImageResource(R.drawable.small_movie_poster);
-		new DownloadImageTask(holder.imageview).execute(moviesList.get(position).getThumbnailUrl());
+		if (moviesList.get(position).getThumbnailUrl() == null){
+			Log.d("Error","Null"+moviesList.get(position).getThumbnailUrl());
+		} else {
+			new DownloadImageTask(holder.imageview).execute(moviesList.get(position).getThumbnailUrl());
+		}
 		holder.tvName.setText(moviesList.get(position).getDisplay_title());
 		holder.tvDescription.setText(moviesList.get(position).getSummary());
 		holder.tvDOB.setText("Mpa Rating: " + moviesList.get(position).getRating());
