@@ -47,7 +47,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_MOVIE_TABLE = "CREATE TABLE " + TABLE_MOVIES + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TITLE + " TEXT, " + KEY_MPA_RATING + " TEXT, " + KEY_HEADLINE +" TEXT, " + KEY_CRITICS_PICK + " TEXT, " + KEY_DATE_UPDATED +" TEXT, " + KEY_FOLLOW + " TEXT, " +
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT, " + KEY_MPA_RATING + " TEXT, " + KEY_HEADLINE +" TEXT, " + KEY_CRITICS_PICK + " TEXT, " + KEY_DATE_UPDATED +" TEXT, " + KEY_FOLLOW + " TEXT, " +
                 KEY_DESCRIPTION + " TEXT " + ")";
         db.execSQL(CREATE_MOVIE_TABLE);
     }

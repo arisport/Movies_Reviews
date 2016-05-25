@@ -9,4 +9,6 @@
     <string name="search">Search</string>
     <string name="title_activity_search_results">Search Results</string>
     <string name="title_activity_saved_movies">Saved Movies</string>
+    <string name="title_activity_more_information">More Information</string>
+    <string name="more_info"><u><b><i>For More Info Click On The Link Below</i></b></u></string>
 </resources>

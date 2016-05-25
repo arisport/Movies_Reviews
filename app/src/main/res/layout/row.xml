@@ -68,14 +68,27 @@
 
     <TextView
         android:id="@+id/tvSpouse"
-        android:layout_width="wrap_content" android:textColor="#166CED"
+        android:layout_width="wrap_content"
+        android:textColor="#009A57"
         android:layout_height="wrap_content"
-        android:text="Spouse: Katie Holmes" />
+        android:text="" />
+
+    <TextView
+        android:id="@+id/InformationTitle"
+        android:layout_width="wrap_content"
+        android:textColor="#D64530"
+        android:layout_height="wrap_content"
+        android:text="@string/more_info"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
     <TextView
         android:id="@+id/tvChildren"
-        android:layout_width="wrap_content" android:textColor="#166CED"
+        android:layout_width="wrap_content"
+        android:textColor="#166CED"
         android:layout_height="wrap_content"
-        android:text="Children: Suri Cruise, Isabella Jane Cruise, Connor Cruise" />
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceSmall"
+       />
 
 </LinearLayout>

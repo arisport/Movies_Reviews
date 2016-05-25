@@ -3,6 +3,7 @@ package com.moviesratings.Adapter;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,13 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviesratings.Model.Movie;
+import com.moviesratings.MoreInformation;
 import com.moviesratings.R;
+import com.moviesratings.Search;
 
 public class MoviesAdapter extends ArrayAdapter<Movie> {
 	ArrayList<Movie> moviesList;
 	LayoutInflater vi;
 	int Resource;
 	ViewHolder holder;
+	public final static String MESSAGE_MOVIES = "com.moviesratings.MESSAGE";
 
 	public MoviesAdapter(Context context, int resource, ArrayList<Movie> objects) {
 		super(context, resource, objects);
@@ -33,11 +37,11 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Resource = resource;
 		moviesList = objects;
+
 	}
- 
-	
+
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		// convert view = design
 		View v = convertView;
 		if (v == null) {
@@ -67,7 +71,18 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 		holder.tvCountry.setText(moviesList.get(position).getHeadline());
 		holder.tvHeight.setText("Critics Pick:"+moviesList.get(position).getCritics_pick());
 		holder.tvSpouse.setText("Date Updated: " + moviesList.get(position).getDate_updated());
-		holder.tvChildren.setText("Follow: " + moviesList.get(position).getUrl());
+		holder.tvChildren.setText("" + moviesList.get(position).getUrl());
+		holder.tvChildren.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String content = moviesList.get(position).getUrl();
+				//Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(getContext(), MoreInformation.class);
+				intent.putExtra(MESSAGE_MOVIES, content);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				getContext().startActivity(intent);
+			}
+		});
 		return v;
 
 	}
@@ -83,6 +98,8 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 		public TextView tvChildren;
 
 	}
+
+
 
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 		ImageView bmImage;

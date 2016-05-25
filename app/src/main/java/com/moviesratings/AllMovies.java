@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 
 import com.moviesratings.Adapter.MoviesAdapter;
 import com.moviesratings.Database.DatabaseHandler;
@@ -61,8 +63,7 @@ public class AllMovies extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long id) {
-
-                DatabaseHandler  db = new DatabaseHandler(getApplicationContext());
+                DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                 db.addMovie(new Movie(moviesList.get(position).getDisplay_title(), moviesList.get(position).getRating(), moviesList.get(position).getCritics_pick(),
                         moviesList.get(position).getHeadline(), moviesList.get(position).getSummary(), moviesList.get(position).getUrl(), moviesList.get(position).getDate_updated()));
                 Snackbar.make(coordinatorLayout, moviesList.get(position).getDisplay_title() + " Saved Locally", Snackbar.LENGTH_INDEFINITE)
@@ -77,12 +78,12 @@ public class AllMovies extends AppCompatActivity {
                         .show();
             }
         });
-
         log();
 
     }
 
-    public void log(){
+
+    public void log() {
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
         Log.d("Reading: ", "Reading all contacts..");
         List<Movie> contacts = db.getAllMovies();
@@ -159,12 +160,21 @@ public class AllMovies extends AppCompatActivity {
                             movie.setHeight(multimedia.getString("height"));
                             movie.setWidth(multimedia.getString("width"));
 
+                        final Snackbar snackBar =  Snackbar.make(coordinatorLayout, "To Save Movie Just Tap On Each List Item", Snackbar.LENGTH_INDEFINITE);
+                        snackBar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                snackBar.dismiss();
+                            }
+                        })
+                                .show();
 
 
 
                         // adding movie to movies array
                         moviesList.add(movie);
                     }
+
                     return true;
                 }
 
@@ -175,6 +185,8 @@ public class AllMovies extends AppCompatActivity {
             }
             return false;
         }
+
+
 
         protected void onPostExecute(Boolean result) {
             dialog.cancel();

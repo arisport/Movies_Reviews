@@ -158,8 +158,6 @@ public class Search extends AppCompatActivity {
                         } else {
                             Log.d("Null ", "> ");
                         }
-                        // adding movie to movies array
-                        moviesList.add(movie);
 
                         final Snackbar snackBar =  Snackbar.make(coordinatorLayout, "To Save Movie Just Click On Each List Item", Snackbar.LENGTH_INDEFINITE);
                         snackBar.setAction("OK", new View.OnClickListener() {
@@ -169,6 +167,8 @@ public class Search extends AppCompatActivity {
                             }
                         })
                                 .show();
+                        // adding movie to movies array
+                        moviesList.add(movie);
                     }
                     return true;
                 }
