@@ -4,7 +4,18 @@ public class Movie {
 	private String display_title, thumbnailUrl,rating,critics_pick,byline,headline,summary,publication_date,
 	 opening_date,date_updated,type,url,suggested,type_multimedia,width,height;
 
-	public Movie() {
+	public  Movie(){
+
+	}
+
+	public Movie(String title, String rating, String critics,String headline, String summary,String url,String date_updated) {
+		this.display_title = title;
+		this.rating = rating;
+		this.critics_pick = critics;
+		this.headline = headline;
+		this.summary=summary;
+		this.date_updated=date_updated;
+		this.url=url;
 	}
 
 	public Movie(String title, String rating, String critics, String line, String headline, String summary, String publication_date
@@ -27,7 +38,10 @@ public class Movie {
 		this.width = width;
 		this.height = height;
 
+
+
 	}
+
 
 	public String getDisplay_title() {
 		return display_title;

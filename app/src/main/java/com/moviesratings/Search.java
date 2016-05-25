@@ -1,28 +1,21 @@
 package com.moviesratings;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.moviesratings.Adapter.MoviesAdapter;
+import com.moviesratings.Database.DatabaseHandler;
 import com.moviesratings.Model.Movie;
 import com.moviesratings.helper.ServiceHandler;
 import org.apache.http.HttpEntity;
@@ -34,14 +27,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 public class Search extends AppCompatActivity {
-
+    private CoordinatorLayout coordinatorLayout;
     ArrayList<Movie> moviesList;
     private String url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json?api-key=75ae7de71d0f42adbc2bb18832981a35";
     MoviesAdapter adapter;
@@ -54,45 +44,8 @@ public class Search extends AppCompatActivity {
         Intent intent = getIntent();
         final String movieRequest = intent.getStringExtra(MainActivity.MESSAGE);
 
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage("Please Enter The Title Of The New Movie");
-                View content =  inflater.inflate(R.layout.infodialog, null)
-                builder.setView(R.layout.dialog_signin);
-                // Set up the input
-                EditText input = (EditText) view.findViewById(R.id.MovieRequest);
-                builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finish();
-                        String fabRequest = input.getText().toString();
-                        Log.d("Response: ", "> "+fabRequest);
-                        Toast.makeText(Search.this,"You clicked yes button",Toast.LENGTH_LONG).show();
-                    }
-                });
-
-                builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null)
-                        .show();
-            }
-        });
-           */
-
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
         moviesList = new ArrayList<Movie>();
 
         //First of all the movie request is saved in a temp variable. In the new string all the empty spaces are replaced by
@@ -105,18 +58,29 @@ public class Search extends AppCompatActivity {
         new JSONAsyncTask().execute(url+"&"+"query"+"="+temp);
         // Only for testing
         Log.d("Response: ", "> " + url+"&"+"query"+"="+temp);
-        ListView listview = (ListView) findViewById(R.id.list);
+        final ListView listview = (ListView) findViewById(R.id.list);
         adapter = new MoviesAdapter(getApplicationContext(), R.layout.row, moviesList);
 
         listview.setAdapter(adapter);
-
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long id) {
-                // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), moviesList.get(position).getDisplay_title(), Toast.LENGTH_LONG).show();
+
+                DatabaseHandler  db = new DatabaseHandler(getApplicationContext());
+                db.addMovie(new Movie(moviesList.get(position).getDisplay_title(), moviesList.get(position).getRating(), moviesList.get(position).getCritics_pick(),
+                        moviesList.get(position).getHeadline(), moviesList.get(position).getSummary(), moviesList.get(position).getUrl(), moviesList.get(position).getDate_updated()));
+                Snackbar.make(coordinatorLayout, moviesList.get(position).getDisplay_title()+" Saved Locally", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("View", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getApplicationContext(), SavedMovies.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
+                            }
+                        })
+                        .show();
             }
         });
     }
@@ -185,17 +149,26 @@ public class Search extends AppCompatActivity {
                         movie.setUrl(link.getString("url"));
                         movie.setSuggested(link.getString("suggested_link_text"));
                         // Multimedia node is JSON Object
-                        if (JsonObject.isNull("multimedia")){
-                            Log.d("Null ", "> ");
-                        } if (!JsonObject.isNull("multimedia")){
+                        if (!JsonObject.isNull("multimedia")){
                             JSONObject multimedia = obj.getJSONObject("multimedia");
                             movie.setType_multimedia(multimedia.getString("type"));
                             movie.setThumbnailUrl(multimedia.getString("src"));
                             movie.setHeight(multimedia.getString("height"));
                             movie.setWidth(multimedia.getString("width"));
+                        } else {
+                            Log.d("Null ", "> ");
                         }
                         // adding movie to movies array
                         moviesList.add(movie);
+
+                        final Snackbar snackBar =  Snackbar.make(coordinatorLayout, "To Save Movie Just Click On Each List Item", Snackbar.LENGTH_INDEFINITE);
+                        snackBar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                snackBar.dismiss();
+                            }
+                        })
+                                .show();
                     }
                     return true;
                 }

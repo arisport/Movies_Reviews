@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Movies Ratings</string>
+    <string name="app_name">Movies Reviews</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -7,5 +7,6 @@
     <string name="title_activity_search">Search</string>
     <string name="action_search">Search</string>
     <string name="search">Search</string>
-    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="title_activity_search_results">Search Results</string>
+    <string name="title_activity_saved_movies">Saved Movies</string>
 </resources>

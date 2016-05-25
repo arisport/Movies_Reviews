@@ -1,23 +1,22 @@
 package com.moviesratings;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviesratings.Adapter.MoviesAdapter;
+import com.moviesratings.Database.DatabaseHandler;
 import com.moviesratings.Model.Movie;
 import com.moviesratings.helper.ServiceHandler;
 
@@ -33,12 +32,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AllMovies extends AppCompatActivity {
 
     ArrayList<Movie> moviesList;
     private String url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json?api-key=75ae7de71d0f42adbc2bb18832981a35";
     MoviesAdapter adapter;
+    private CoordinatorLayout coordinatorLayout;
 
 
     @Override
@@ -48,20 +49,51 @@ public class AllMovies extends AppCompatActivity {
         moviesList = new ArrayList<Movie>();
         new JSONAsyncTask().execute(url);
 
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
+
         ListView listview = (ListView) findViewById(R.id.list);
         adapter = new MoviesAdapter(getApplicationContext(), R.layout.row, moviesList);
 
         listview.setAdapter(adapter);
-
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long id) {
-                // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), moviesList.get(position).getDisplay_title(), Toast.LENGTH_LONG).show();
+
+                DatabaseHandler  db = new DatabaseHandler(getApplicationContext());
+                db.addMovie(new Movie(moviesList.get(position).getDisplay_title(), moviesList.get(position).getRating(), moviesList.get(position).getCritics_pick(),
+                        moviesList.get(position).getHeadline(), moviesList.get(position).getSummary(), moviesList.get(position).getUrl(), moviesList.get(position).getDate_updated()));
+                Snackbar.make(coordinatorLayout, moviesList.get(position).getDisplay_title() + " Saved Locally", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("View", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getApplicationContext(), SavedMovies.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
+                            }
+                        })
+                        .show();
             }
         });
+
+        log();
+
+    }
+
+    public void log(){
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        Log.d("Reading: ", "Reading all contacts..");
+        List<Movie> contacts = db.getAllMovies();
+
+        for (Movie cn : contacts) {
+            String log = "Id: "+" ,Title: " + cn.getDisplay_title() + " ,Descrition: " + cn.getRating()+ " ,MPA Rating: " + cn.getSummary()+ " ,Headline: " + cn.getUrl()
+                    + " ,Critics Pick: " + cn.getHeadline()+ " ,Date Updated: " + cn.getCritics_pick()+ " ,Follow: " + cn.getDate_updated();
+            // Writing Contacts to log
+            Log.d("Name: ", log);
+        }
+
     }
 
 
