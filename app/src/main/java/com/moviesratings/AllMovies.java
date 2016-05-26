@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,10 +30,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class AllMovies extends AppCompatActivity {
 
@@ -48,21 +46,32 @@ public class AllMovies extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_allmovies);
+        //Create a new movieList to store the movies
         moviesList = new ArrayList<Movie>();
+
+        //Call the JSONAsyncTask class with the url we defined before as variable
         new JSONAsyncTask().execute(url);
 
+        // Referencing the coordinator layout of my xml in order to use snackbar.
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
-
+        // Referencing the list
         ListView listview = (ListView) findViewById(R.id.list);
+        // Creating new adapter
         adapter = new MoviesAdapter(getApplicationContext(), R.layout.row, moviesList);
-
+        // attach the adapter to my list
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long id) {
+                //Users are able to save a movie by just tapping on each separate item of the list.
+                // In order to save the movie, we creating a new database handler db.
+                //We inherit the data from the list (we defined before movielist) by using the
+                // method get(position) of the list.
+                //At the end a snackbar with a button view is displayed on the screen informing the user which movie is saved
+                // Moreover users can click on the view button of the snackbar and visit the saved movies activity.
                 DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                 db.addMovie(new Movie(moviesList.get(position).getDisplay_title(), moviesList.get(position).getRating(), moviesList.get(position).getCritics_pick(),
                         moviesList.get(position).getHeadline(), moviesList.get(position).getSummary(), moviesList.get(position).getUrl(), moviesList.get(position).getDate_updated()));
@@ -78,25 +87,15 @@ public class AllMovies extends AppCompatActivity {
                         .show();
             }
         });
-        log();
 
     }
 
-
-    public void log() {
-        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-        Log.d("Reading: ", "Reading all contacts..");
-        List<Movie> contacts = db.getAllMovies();
-
-        for (Movie cn : contacts) {
-            String log = "Id: "+" ,Title: " + cn.getDisplay_title() + " ,Descrition: " + cn.getRating()+ " ,MPA Rating: " + cn.getSummary()+ " ,Headline: " + cn.getUrl()
-                    + " ,Critics Pick: " + cn.getHeadline()+ " ,Date Updated: " + cn.getCritics_pick()+ " ,Follow: " + cn.getDate_updated();
-            // Writing Contacts to log
-            Log.d("Name: ", log);
-        }
-
-    }
-
+    // The class JSONAsynch is executing the url in order to send the request to server
+    // and to get a response. If the request has respond code 200 means that the request
+    // has been carried out successfully. Moreover by extending my class to AsyncTask class,
+    // AsyncTask enables proper and easy use of the UI thread. This class allows to perform
+    // background operations and publish results on the UI thread without having to manipulate
+    // threads and/or handlers
 
     class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
 
@@ -132,10 +131,13 @@ public class AllMovies extends AppCompatActivity {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
 
-
+                    // Creating a new JSON object and a new JSON array
                     JSONObject JsonObject = new JSONObject(data);
                     JSONArray JsonArray = JsonObject.getJSONArray("results");
 
+                    // for loop in order to visit all the elements of the JSONArray
+                    // also in each iteration we creating a new object Movie
+                    // and we are setting the values from the response
                     for (int i = 0; i < JsonArray.length(); i++) {
                         JSONObject obj = JsonArray.getJSONObject(i);
                         Movie movie = new Movie();
@@ -160,6 +162,7 @@ public class AllMovies extends AppCompatActivity {
                             movie.setHeight(multimedia.getString("height"));
                             movie.setWidth(multimedia.getString("width"));
 
+                        // Snackbar to display information to the user about how to use the Activity.
                         final Snackbar snackBar =  Snackbar.make(coordinatorLayout, "To Save Movie Just Tap On Each List Item", Snackbar.LENGTH_INDEFINITE);
                         snackBar.setAction("OK", new View.OnClickListener() {
                             @Override
@@ -168,8 +171,6 @@ public class AllMovies extends AppCompatActivity {
                             }
                         })
                                 .show();
-
-
 
                         // adding movie to movies array
                         moviesList.add(movie);
@@ -186,8 +187,6 @@ public class AllMovies extends AppCompatActivity {
             return false;
         }
 
-
-
         protected void onPostExecute(Boolean result) {
             dialog.cancel();
             adapter.notifyDataSetChanged();
@@ -197,9 +196,11 @@ public class AllMovies extends AppCompatActivity {
         }
     }
 
+    // Animation
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        // Animation
         overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
     }
 
@@ -225,6 +226,7 @@ public class AllMovies extends AppCompatActivity {
 
         if (id == android.R.id.home) {
             this.finish();
+            // Animation
             overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
             return true;
         }

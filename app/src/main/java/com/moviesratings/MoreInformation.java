@@ -32,6 +32,9 @@ public class MoreInformation extends AppCompatActivity {
         Intent intent = getIntent();
         final String moreInfo = intent.getStringExtra(MoviesAdapter.MESSAGE_MOVIES);
 
+        //if condition to check the current network state of the device.
+        //if there is an internet connection the a website will be loaded in the MoreInformation
+        //Activity. The link which is loaded is passed from the listview Activities(AllMovies-SavedMovies-Search).
         if (isNetworkStatusAvialable(getApplicationContext())){
             webView.getSettings().setJavaScriptEnabled(true);
             webView.loadUrl(moreInfo);
@@ -40,6 +43,10 @@ public class MoreInformation extends AppCompatActivity {
             webView.getSettings().setBuiltInZoomControls(true);
             webView.getSettings().setUseWideViewPort(true);
             webView.setLongClickable(false);
+            //I set up a webview client because a webview should react and respond to user preferences
+            // For example if there is an email link on the page users have the option to click on the link
+            // and the mail intent will fire up with the to: field completed.
+            //Moreover users can download documents in extensions such as: pdf-docx.
             webView.setWebViewClient(new WebViewClient() {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     if (url.endsWith(".pdf")) {
@@ -92,6 +99,8 @@ public class MoreInformation extends AppCompatActivity {
 
     }
 
+    //Method to check the network status of the device by calling the
+    // Connectivity Manager.
     public static boolean isNetworkStatusAvialable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -116,6 +125,7 @@ public class MoreInformation extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    //Animation
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -133,7 +143,7 @@ public class MoreInformation extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
+                //Animation
                 this.finish();
                 overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);
                 return true;

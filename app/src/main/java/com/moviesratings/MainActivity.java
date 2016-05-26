@@ -20,9 +20,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Referencing the coordinator layout of my xml in order to use snackbar.
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
 
+        // Referencing the buttons  and add action with the setOnClickListener
         Button all_movies = (Button) findViewById(R.id.AllMovies);
         all_movies.setOnClickListener(new View.OnClickListener() {
             @Override

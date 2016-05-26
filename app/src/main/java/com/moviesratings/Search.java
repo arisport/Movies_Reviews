@@ -44,13 +44,15 @@ public class Search extends AppCompatActivity {
         Intent intent = getIntent();
         final String movieRequest = intent.getStringExtra(MainActivity.MESSAGE);
 
+        // Referencing the coordinator layout of my xml in order to use snackbar.
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
+
+        //Create a new movieList to store the movies
         moviesList = new ArrayList<Movie>();
 
         //First of all the movie request is saved in a temp variable. In the new string all the empty spaces are replaced by
         // + sign. Then the method RemoveLastElementOfMovieRequest is called in order to remove the last + sign of the request
-
         String temp =movieRequest.replaceAll("\\s","+");
         temp = temp.trim();
         temp = RemoveLastElementOfMovieRequest(temp);
@@ -58,16 +60,25 @@ public class Search extends AppCompatActivity {
         new JSONAsyncTask().execute(url+"&"+"query"+"="+temp);
         // Only for testing
         Log.d("Response: ", "> " + url+"&"+"query"+"="+temp);
-        final ListView listview = (ListView) findViewById(R.id.list);
+
+        // Referencing the list
+        ListView listview = (ListView) findViewById(R.id.list);
+        // Creating new adapter
         adapter = new MoviesAdapter(getApplicationContext(), R.layout.row, moviesList);
 
+        // attach the adapter to my list
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long id) {
-
+                //Users are able to save a movie by just tapping on each separate item of the list.
+                // In order to save the movie, we creating a new database handler db.
+                //We inherit the data from the list (we defined before movielist) by using the
+                // method get(position) of the list.
+                //At the end a snackbar with a button view is displayed on the screen informing the user which movie is saved
+                // Moreover users can click on the view button of the snackbar and visit the saved movies activity.
                 DatabaseHandler  db = new DatabaseHandler(getApplicationContext());
                 db.addMovie(new Movie(moviesList.get(position).getDisplay_title(), moviesList.get(position).getRating(), moviesList.get(position).getCritics_pick(),
                         moviesList.get(position).getHeadline(), moviesList.get(position).getSummary(), moviesList.get(position).getUrl(), moviesList.get(position).getDate_updated()));
@@ -84,7 +95,7 @@ public class Search extends AppCompatActivity {
             }
         });
     }
-
+    // Method to remove the last '+' of the query string
     public String RemoveLastElementOfMovieRequest(String str) {
         if (str != null && str.length() > 0 && str.charAt(str.length()-1)=='+') {
             str = str.substring(0, str.length()-1);
@@ -92,7 +103,12 @@ public class Search extends AppCompatActivity {
         return str;
     }
 
-
+    // The class JSONAsynch is executing the url in order to send the request to server
+    // and to get a response. If the request has respond code 200 means that the request
+    // has been carried out successfully. Moreover by extending my class to AsyncTask class,
+    // AsyncTask enables proper and easy use of the UI thread. This class allows to perform
+    // background operations and publish results on the UI thread without having to manipulate
+    // threads and/or handlers
     class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
 
         ProgressDialog dialog;
@@ -127,10 +143,14 @@ public class Search extends AppCompatActivity {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
 
-
+                    // Creating a new JSON object and a new JSON array
                     JSONObject JsonObject = new JSONObject(data);
                     JSONArray JsonArray = JsonObject.getJSONArray("results");
 
+
+                    // for loop in order to visit all the elements of the JSONArray
+                    // also in each iteration we creating a new object Movie
+                    // and we are setting the values from the response
                     for (int i = 0; i < JsonArray.length(); i++) {
                         JSONObject obj = JsonArray.getJSONObject(i);
                         Movie movie = new Movie();
@@ -149,6 +169,8 @@ public class Search extends AppCompatActivity {
                         movie.setUrl(link.getString("url"));
                         movie.setSuggested(link.getString("suggested_link_text"));
                         // Multimedia node is JSON Object
+                        // I have an if condition which basicly checks if the multimedia JSON object is empty
+                        // and avoid crashing of the program.
                         if (!JsonObject.isNull("multimedia")){
                             JSONObject multimedia = obj.getJSONObject("multimedia");
                             movie.setType_multimedia(multimedia.getString("type"));
@@ -190,6 +212,7 @@ public class Search extends AppCompatActivity {
         }
     }
 
+    //Animation
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -215,7 +238,7 @@ public class Search extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+        //Animation
         if (id == android.R.id.home) {
             this.finish();
             overridePendingTransition(R.anim.rotate_out, R.anim.rotate_in);

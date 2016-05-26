@@ -42,7 +42,7 @@ public class Movie {
 
 	}
 
-
+////Getters And Setters
 	public String getDisplay_title() {
 		return display_title;
 	}

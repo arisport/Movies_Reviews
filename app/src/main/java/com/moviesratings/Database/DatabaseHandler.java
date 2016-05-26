@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import com.moviesratings.Model.Movie;
 
@@ -66,7 +66,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             * All CRUD(Create, Read, Update, Delete) Operations
     */
 
-    // Adding new contact
+    // Adding new Movie
     public void addMovie(Movie movie) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -114,18 +114,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return movieList;
     }
 
-    /*
 
-    // Deleting single contact
-    public void deleteContact(Contact contact) {
+
+    // Deleting single movie
+    public void deleteMovie(Movie movie) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
-                new String[] { String.valueOf(contact.getID()) });
+        db.delete(TABLE_MOVIES, KEY_TITLE + " = ?",
+                new String[] { String.valueOf(movie.getDisplay_title()) });
         db.close();
-    }  */
+    }
 
 
-    // Getting contacts Count
+    // Getting Movies Count
     public int getContactsCount() {
         String countQuery = "SELECT  * FROM " + TABLE_MOVIES;
         SQLiteDatabase db = this.getReadableDatabase();
