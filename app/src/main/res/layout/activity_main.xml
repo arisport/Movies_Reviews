@@ -32,9 +32,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/SavedMovies"
+        android:layout_below="@+id/SavedMovies">
 
-        tools:showIn="@layout/activity_my">
         <EditText android:id="@+id/edit_message"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -47,6 +46,5 @@
             android:onClick="sendMovieRequest"/>
 
     </LinearLayout>
-
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

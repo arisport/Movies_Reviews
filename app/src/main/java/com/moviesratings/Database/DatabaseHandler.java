@@ -126,12 +126,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Getting Movies Count
-    public int getContactsCount() {
+    public int getMoviesCount() {
         String countQuery = "SELECT  * FROM " + TABLE_MOVIES;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         cursor.close();
-
         // return count
         return cursor.getCount();
     }

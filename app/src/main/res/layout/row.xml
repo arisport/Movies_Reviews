@@ -34,14 +34,14 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/tvDateOfBirth"
+                android:id="@+id/MpaRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#D64530"
                 android:text="Date of Birth: July 3, 1962" />
 
             <TextView
-                android:id="@+id/tvHeight"
+                android:id="@+id/Critics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Height: 1.80 m"
@@ -49,7 +49,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/tvCountry"
+                android:id="@+id/Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#D64530"
@@ -67,7 +67,7 @@
         android:text="Description" />
 
     <TextView
-        android:id="@+id/tvSpouse"
+        android:id="@+id/DateUpdated"
         android:layout_width="wrap_content"
         android:textColor="#009A57"
         android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
         />
 
     <TextView
-        android:id="@+id/tvChildren"
+        android:id="@+id/Url"
         android:layout_width="wrap_content"
         android:textColor="#166CED"
         android:layout_height="wrap_content"

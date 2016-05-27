@@ -46,11 +46,11 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 			holder.imageview = (ImageView) v.findViewById(R.id.ivImage);
 			holder.tvName = (TextView) v.findViewById(R.id.tvName);
 			holder.tvDescription = (TextView) v.findViewById(R.id.tvDescriptionn);
-			holder.MpaRating = (TextView) v.findViewById(R.id.tvDateOfBirth);
-			holder.Headline = (TextView) v.findViewById(R.id.tvCountry);
-			holder.CriticsPick = (TextView) v.findViewById(R.id.tvHeight);
-			holder.DateUpdated = (TextView) v.findViewById(R.id.tvSpouse);
-			holder.Url = (TextView) v.findViewById(R.id.tvChildren);
+			holder.MpaRating = (TextView) v.findViewById(R.id.MpaRating);
+			holder.Headline = (TextView) v.findViewById(R.id.Headline);
+			holder.CriticsPick = (TextView) v.findViewById(R.id.Critics);
+			holder.DateUpdated = (TextView) v.findViewById(R.id.DateUpdated);
+			holder.Url = (TextView) v.findViewById(R.id.Url);
 			v.setTag(holder);
 		} else {
 			holder = (ViewHolder) v.getTag();
